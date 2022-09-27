@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author RollW
@@ -75,12 +76,16 @@ public class LocaleStringsWriter extends ClassWriter {
 
     private List<FieldSpec> createsAllFields() throws FileNotFoundException {
         List<FieldSpec> fieldSpecs = new ArrayList<>();
-        mKeys.forEach(key -> {
-            fieldSpecs.add(createStringField(key, key));
-        });
+        mKeys.forEach(key ->
+                fieldSpecs.add(createStringField(
+                        convertKeyToJavaFieldName(key),
+                        key))
+        );
 
         return fieldSpecs;
     }
 
-
+    private static String convertKeyToJavaFieldName(String key) {
+        return key.replaceAll(Pattern.quote("."), "_");
+    }
 }
